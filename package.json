@@ -2,5 +2,5 @@
   "name": "home-workout-tracker",
   "private": true,
   "type": "module",
-  "scripts": { "test": "node --test tests/*.test.mjs", "check": "node --check js/app.js && node --check js/db.js && node --check js/backup.js && node --check js/timers.js" }
+  "scripts": { "test": "node --test tests/*.test.mjs", "check": "node --check js/app.js && node --check js/db.js && node --check js/backup.js && node --check js/timers.js && node --check js/workout-domain.js" }
 }
