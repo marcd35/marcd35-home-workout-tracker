@@ -3,6 +3,7 @@ import { templates as seedTemplates } from '../data/templates.js';
 import { get,getAll,put,putMany,byIndex,remove,removeWhere } from './db.js';
 import { TimestampTimer,formatDuration,now } from './timers.js';
 import { makeBackup,restoreBackup,makeSetCsv,download } from './backup.js';
+import './history-editor.js';
 
 const $=s=>document.querySelector(s), view=$('#view'), status=$('#status'), activeKey='hwt-active-v2';
 let active=JSON.parse(localStorage.getItem(activeKey)||'null'), rest=new TimestampTimer(active?.restTimer), tick;

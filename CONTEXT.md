@@ -83,3 +83,7 @@ _Avoid_: Medical alert
 **Cooldown Entry**:
 A completed or skipped recovery movement within a Workout Session, optionally recording duration and notes after planned training is complete.
 _Avoid_: Post-workout set
+
+**Direct Edit**:
+An in-page form that changes one History Entry through explicit Save or Cancel controls.
+_Avoid_: Browser prompt
