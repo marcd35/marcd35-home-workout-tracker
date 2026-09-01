@@ -2,16 +2,16 @@ import { DB_NAME, DB_VERSION, STORE_NAMES, getAll, replaceAll } from './db.js';
 
 const required = {
   exercises: ['id','name'], templates: ['id','name'], workoutSessions: ['id','workoutDate','startTimestamp','completionStatus'],
-  exerciseSets: ['id','workoutSessionId','exerciseId','setNumber'], cardioSessions: ['id','timestamp'], bodyMetrics: ['id','date']
+  exerciseSets: ['id','workoutSessionId','exerciseId','setNumber'], cardioSessions: ['id','timestamp'], bodyMetrics: ['id','date'], pauseEvents: ['id','workoutSessionId','startTimestamp'], painReports: ['id','workoutSessionId']
 };
 export async function makeBackup() {
   const records = Object.fromEntries(await Promise.all(STORE_NAMES.map(async name => [name, await getAll(name)])));
-  return { format: 'home-workout-tracker-backup', version: 1, database: { name: DB_NAME, version: DB_VERSION }, exportedAt: new Date().toISOString(), records };
+  return { format: 'home-workout-tracker-backup', version: 2, database: { name: DB_NAME, version: DB_VERSION }, exportedAt: new Date().toISOString(), records };
 }
 export function validateBackup(value) {
-  if (!value || value.format !== 'home-workout-tracker-backup' || value.version !== 1 || !value.records) throw new Error('This is not a supported Home Workout Tracker backup.');
+  if (!value || value.format !== 'home-workout-tracker-backup' || ![1,2].includes(value.version) || !value.records) throw new Error('This is not a supported Home Workout Tracker backup.');
   for (const store of STORE_NAMES) {
-    if (!Array.isArray(value.records[store])) throw new Error(`Backup is missing the ${store} collection.`);
+    if (!Array.isArray(value.records[store])) value.records[store]=[];
     for (const row of value.records[store]) for (const field of required[store]) if (row[field] === undefined || row[field] === null || row[field] === '') throw new Error(`${store} contains a record missing ${field}.`);
   }
   return value;

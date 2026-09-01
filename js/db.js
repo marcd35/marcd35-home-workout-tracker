@@ -1,6 +1,6 @@
 export const DB_NAME = 'home-workout-tracker';
-export const DB_VERSION = 1;
-export const STORE_NAMES = ['exercises', 'templates', 'workoutSessions', 'exerciseSets', 'cardioSessions', 'bodyMetrics'];
+export const DB_VERSION = 2;
+export const STORE_NAMES = ['exercises', 'templates', 'workoutSessions', 'exerciseSets', 'cardioSessions', 'bodyMetrics', 'pauseEvents', 'painReports'];
 
 const openRequest = () => new Promise((resolve, reject) => {
   const request = indexedDB.open(DB_NAME, DB_VERSION);
@@ -17,6 +17,8 @@ const openRequest = () => new Promise((resolve, reject) => {
     create('exerciseSets', { keyPath: 'id' }, [['bySession','workoutSessionId'], ['byExercise','exerciseId'], ['byExerciseFinished','exerciseFinished']]);
     create('cardioSessions', { keyPath: 'id' }, [['byTimestamp','timestamp']]);
     create('bodyMetrics', { keyPath: 'id' }, [['byDate','date']]);
+    create('pauseEvents', { keyPath: 'id' }, [['bySession','workoutSessionId'], ['byStart','startTimestamp']]);
+    create('painReports', { keyPath: 'id' }, [['bySession','workoutSessionId'], ['byExercise','exerciseId']]);
   };
   request.onsuccess = () => resolve(request.result);
   request.onerror = () => reject(request.error);
@@ -30,3 +32,5 @@ export async function putMany(store, values) { const d=await db(); return new Pr
 export async function byIndex(store, index, value) { const d=await db(); return new Promise((resolve,reject) => { const r=d.transaction(store).objectStore(store).index(index).getAll(value); r.onsuccess=()=>resolve(r.result); r.onerror=()=>reject(r.error); }); }
 export async function clearAll() { const d=await db(); return new Promise((resolve,reject) => { const tx=d.transaction(STORE_NAMES,'readwrite'); STORE_NAMES.forEach(name=>tx.objectStore(name).clear()); tx.oncomplete=resolve; tx.onerror=()=>reject(tx.error); }); }
 export async function replaceAll(records) { const d=await db(); return new Promise((resolve,reject) => { const tx=d.transaction(STORE_NAMES,'readwrite'); STORE_NAMES.forEach(name=>{ const s=tx.objectStore(name); s.clear(); (records[name] || []).forEach(row=>s.put(row)); }); tx.oncomplete=resolve; tx.onerror=()=>reject(tx.error); }); }
+export async function remove(store, key) { const d=await db(); return new Promise((resolve,reject)=>{const r=d.transaction(store,'readwrite').objectStore(store).delete(key);r.onsuccess=resolve;r.onerror=()=>reject(r.error);}); }
+export async function removeWhere(store, index, value) { const d=await db(); return new Promise((resolve,reject)=>{const tx=d.transaction(store,'readwrite');const request=tx.objectStore(store).index(index).openKeyCursor(IDBKeyRange.only(value));request.onsuccess=()=>{const cursor=request.result;if(cursor){cursor.delete();cursor.continue();}};tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);}); }

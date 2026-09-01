@@ -14,4 +14,4 @@ export const exercises = [
   ['dumbbell-row','Dumbbell row','strength','10–15 per side','2',120,'Dumbbells'],
   ['dumbbell-rdl','Dumbbell Romanian deadlift','strength','10–15','2',120,'Dumbbells'],
   ['dumbbell-shoulder-press','Dumbbell shoulder press','strength','8–12','2',120,'Dumbbells']
-].map(([id,name,category,defaultRepTarget,defaultSetTarget,defaultRestDuration,equipment]) => ({ id, name, category, defaultRepTarget, defaultSetTarget: Number(defaultSetTarget), defaultRestDuration, equipment, notes: '' }));
+].map(([id,name,category,defaultRepTarget,defaultSetTarget,defaultRestDuration,equipment]) => ({ id, name, category, defaultRepTarget, defaultSetTarget: Number(defaultSetTarget), defaultRestDuration, equipment, notes: '', muscleGroups: ({'pull-ups':['back','biceps'],'chin-ups':['back','biceps'],'push-ups':['chest','triceps'],'goblet-squat':['quads','glutes'],'dumbbell-row':['back','biceps'],'dumbbell-rdl':['hamstrings','glutes'],'dumbbell-shoulder-press':['shoulders','triceps']})[id] || [], variants: id==='dumbbell-shoulder-press'?['Standing','Seated','Other']:[] }));

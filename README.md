@@ -10,13 +10,13 @@ A local-first, iPhone-focused strength and cardio tracker built as a dependency-
 - **The service worker caches application assets only.** It never caches exports or user records.
 - **No credentials or backend are required.** GitHub Pages never receives workout data.
 
-The IndexedDB schema is at version 1. `workoutSessions` is indexed by start time, date, and template; `exerciseSets` by session and exercise; cardio and metrics are indexed by their date/timestamp. Future schema changes belong in `js/db.js` migrations, never in destructive browser-side resets.
+The IndexedDB schema is at version 2. `workoutSessions` is indexed by start time, date, and template; `exerciseSets`, pauses, and pain reports are indexed by session; cardio and metrics are indexed by their date/timestamp. Future schema changes belong in `js/db.js` migrations, never in destructive browser-side resets.
 
 ## Data model
 
 `Workout Session` stores an ID, start-date, start/end timestamps, template reference, duration, notes, completion status, warm-up status, and skipped items. A session that crosses midnight retains its start date.
 
-`Exercise` is a stable catalog item with defaults for reps, sets, rest, equipment, and notes. `Exercise Set` records its own ID, session/exercise IDs, set number, start/end times, duration, reps, load/unit, assistance, future-ready RIR, notes, and configured rest duration. `Cardio Session` stores type, duration, distance/unit, notes, and timestamp. `Body Metric` is already a store for body weight, body fat, muscle percentage, TBW, and later measurements, although V1 does not yet show a metrics form.
+`Exercise` is a stable catalog item with defaults for reps, sets, rest, equipment, notes, muscle groups, and variants. `Exercise Set` records its own ID, session/exercise IDs, set number, start/end times, duration, reps, load/unit, variant, self-set/suggested source, notes, and configured rest duration. Workout records also retain warm-up/cooldown entries, pauses, and pain observations. `Cardio Session` stores start/end timestamps, distance/unit, and notes. `Body Metric` is ready for a later UI.
 
 ## Use
 
